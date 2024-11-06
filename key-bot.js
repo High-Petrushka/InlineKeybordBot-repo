@@ -18,10 +18,16 @@ const secondQuest = new InlineKeyboard()
 	.text(`McCrispy`, '-2');
 
 const thirdQuest = new InlineKeyboard()
-	.text().row()
-	.text().row()
-	.text().row()
-	.text().row();
+	.text('Spagetti Westerns', '3').row()
+	.text('Pizza Westerns', '-3').row()
+	.text('Rizotto Westerns', '-3').row()
+	.text('Wine Westerns', '-3');
+
+const forthQuest = new InlineKeyboard()
+	.text('M41A Pluse Rifle', '-4').row()
+	.text('Podbyrin 9.2 mm Pistol', '-4').row()
+	.text('Adams Revolver', '-4').row()
+	.text('Star Model B', '4');
 
 bot.use(emojiParser());
 
@@ -34,7 +40,7 @@ bot.command('start', async (ctx) => {
 });
 
 bot.command('help', async (ctx) => {
-	const answer = ctx.emoji`/start - begin messaging\n/help - see all available options\nAlso you can use buttons, that offers the bot ${'melting_face'}`;
+	const answer = ctx.emoji`/start - begin messaging\n/help - see all available options\nAlso you can use buttons, that the bot offers ${'melting_face'}`;
 	await ctx.reply(answer);
 });
 
@@ -68,13 +74,57 @@ bot.callbackQuery('-1', async (ctx) => {
 	});
 });
 
+bot.callbackQuery('2', async (ctx) => {
+	const answer = ctx.update.callback_query.data;
+	console.log(answer);
+
+	totalResult.push(Number(answer));
+
+	await ctx.reply('How did Rick Dalton call Westerns that\nwere made in Itally?', {
+		reply_markup: thirdQuest,
+	});
+});
+
+bot.callbackQuery('-2', async (ctx) => {
+	const answer = ctx.update.callback_query.data;
+	console.log(answer);
+
+	totalResult.push(answer);
+
+	await ctx.reply('How did Rick Dalton call Westerns that\nwere made in Itally?', {
+		reply_markup: thirdQuest,
+	});
+});
+
+bot.callbackQuery('3', async (ctx) => {
+	const answer = ctx.update.callback_query.data;
+	console.log(answer);
+
+	totalResult.push(Number(answer));
+
+	await ctx.reply('What kind of gun used Jules in "Pulp\nFiction"?', {
+		reply_markup: forthQuest,
+	});
+});
+
+bot.callbackQuery('-3', async (ctx) => {
+	const answer = ctx.update.callback_query.data;
+	console.log(answer);
+
+	totalResult.push(answer);
+
+	await ctx.reply('What kind of gun used Jules in "Pulp\nFiction"?', {
+		reply_markup: forthQuest,
+	});
+});
+
 bot.on('callback_query:data', async (ctx) => {
 	console.log('Unknown button event with payload', ctx.callbackQuery.data);
 	await ctx.answerCallbackQuery(); // remove loading animation
 });
 
 bot.on('message', async (ctx) => {
-	await ctx.reply('Please, use /help command to see all\navailable options in terms of interaction the with bot', {
+	await ctx.reply('Please, use /help command to see all\navailable options in terms of interaction with the bot', {
 		reply_parameters: {message_id: ctx.update.message.message_id},
 	});
 });
