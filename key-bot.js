@@ -1,7 +1,7 @@
 const { Bot, InlineKeyboard } = require('grammy');
 const { emojiParser } = require('@grammyjs/emoji');
 
-const bot = new Bot('7081370541:AAHbwRj2bPR2iYIYgc7OmyuvEHRGTU0TKwE');
+const bot = new Bot('');
 
 const startBtn = new InlineKeyboard().text('start testing', 'start');
 
