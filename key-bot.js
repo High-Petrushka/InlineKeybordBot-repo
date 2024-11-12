@@ -7,7 +7,7 @@ const startBtn = new InlineKeyboard().text('start testing', 'start');
 
 const firstQuest = new InlineKeyboard()
 	.text(`by Hicox's fingers gesture`, '-1').row()
-	.text(`by Stiglitz's appearance` , '-1').row()
+	.text(`by Stiglitz's appearance`, '-1').row()
 	.text(`by playing "Who an I?"`, '-1').row()
 	.text(`by all mentioned factors`, '1');
 
@@ -45,8 +45,14 @@ bot.command('help', async (ctx) => {
 });
 
 let totalResult = new Array;
+let points = 0;
+let reaction;
 
 bot.callbackQuery('start', async (ctx) => {
+	totalResult = new Array();
+	points = 0;
+	reaction = undefined;
+
 	await ctx.reply(`How did Dieter Hellstrom figure out\nBustard's plan in the bar scene?`, {
 		reply_markup: firstQuest,
 	});
@@ -118,6 +124,52 @@ bot.callbackQuery('-3', async (ctx) => {
 	});
 });
 
+bot.callbackQuery('4', async (ctx) => {
+	const answer = ctx.update.callback_query.data;
+	console.log(answer);
+
+	totalResult.push(Number(answer));
+
+	for (let i = 0; i < totalResult.length; i++) {
+		if (totalResult[i] > 0) {
+			points++;
+		}
+	}
+
+	if (points <= 1) {
+		reaction = ctx.emoji`${'pensive_face'}`;
+	} else if (points <= 3) {
+		reaction = ctx.emoji`${'smiling_face_with_sunglasses'}`;
+	} else {
+		reaction = ctx.emoji`${'exploding_head'}`;
+	}
+
+	await ctx.reply(`Your total result is : ${points} out of 4 ${reaction}`);
+});
+
+bot.callbackQuery('-4', async (ctx) => {
+	const answer = ctx.update.callback_query.data;
+	console.log(answer);
+
+	totalResult.push(answer);
+
+	for (let i = 0; i < totalResult.length; i++) {
+		if (totalResult[i] > 0) {
+			points++;
+		}
+	}
+
+	if (points <= 1) {
+		reaction = ctx.emoji`${'pensive_face'}`;
+	} else if (points <= 3) {
+		reaction = ctx.emoji`${'smiling_face_with_sunglasses'}`;
+	} else {
+		reaction = ctx.emoji`${'exploding_head'}`;
+	}
+
+	await ctx.reply(`Your total result is : ${points} out of 4 ${reaction}`);
+});
+
 bot.on('callback_query:data', async (ctx) => {
 	console.log('Unknown button event with payload', ctx.callbackQuery.data);
 	await ctx.answerCallbackQuery(); // remove loading animation
@@ -125,7 +177,7 @@ bot.on('callback_query:data', async (ctx) => {
 
 bot.on('message', async (ctx) => {
 	await ctx.reply('Please, use /help command to see all\navailable options in terms of interaction with the bot', {
-		reply_parameters: {message_id: ctx.update.message.message_id},
+		reply_parameters: { message_id: ctx.update.message.message_id },
 	});
 });
 
